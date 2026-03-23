@@ -4,87 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>JBLAR - Simulador</title>
-    
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0c1628">
-
     <style>
         :root { 
-            --gold-dark: #AA771C; --gold-mid: #BF953F; --gold-light: #FCF6BA;
+            --gold-mid: #BF953F; --gold-light: #FCF6BA;
             --bg-deep-blue: #0c1628; --screen-bg: rgba(245, 247, 250, 0.98);
             --card-bg: white; --text-main: #333; --text-label: #888;
             --input-bg: #fdfdfd; --input-border: #e1e4e8; --readonly-bg: #f1f3f5;
         }
-
         .dark-theme {
             --screen-bg: #0c1628; --card-bg: #16243d; --text-main: #f0f0f0;
             --text-label: #FCF6BA; --input-bg: #1f2d47; --input-border: #3a4b6b;
             --readonly-bg: #09101d;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-        body { 
-            background-color: var(--bg-deep-blue); 
-            height: 100vh; width: 100vw;
-            overflow: hidden; font-family: 'Segoe UI', Roboto, sans-serif;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        #app-container { 
-            width: 100%; max-width: 480px; height: 100%;
-            position: relative;
-            background-image: url('https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR/refs/heads/main/file_000000002f64720e9e886d9bc8e6a94f.png');
-            background-size: cover; background-position: center top;
-            box-shadow: 0 0 50px rgba(0,0,0,0.9);
-        }
-
-        .screen { display: none; width: 100%; height: 100%; position: relative; flex-direction: column; }
+        body { background-color: var(--bg-deep-blue); height: 100vh; width: 100vw; overflow: hidden; font-family: sans-serif; display: flex; justify-content: center; align-items: center; }
+        #app-container { width: 100%; max-width: 480px; height: 100%; position: relative; background-image: url('https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR/refs/heads/main/file_000000002f64720e9e886d9bc8e6a94f.png'); background-size: cover; background-position: center top; box-shadow: 0 0 50px rgba(0,0,0,0.9); }
+        .screen { display: none; width: 100%; height: 100%; flex-direction: column; }
         .screen.active { display: flex; }
-
-        #home-screen {
-            justify-content: flex-end; 
-            background: linear-gradient(to bottom, transparent 30%, rgba(12, 22, 40, 0.9) 100%);
-            padding-bottom: 60px;
-        }
-
+        #home-screen { justify-content: flex-end; background: linear-gradient(to bottom, transparent 30%, rgba(12, 22, 40, 0.9) 100%); padding-bottom: 60px; }
         .button-container { width: 100%; padding: 0 35px; display: flex; flex-direction: column; gap: 18px; }
-
-        .btn-gold {
-            width: 100%; padding: 18px;
-            background: linear-gradient(135deg, #BF953F, #FCF6BA, #AA771C);
-            border: 1px solid #7a5a12; border-radius: 14px;
-            color: #0c1628; font-weight: 800; font-size: 14px;
-            text-transform: uppercase; letter-spacing: 1px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
-            cursor: pointer;
-        }
-
-        /* ABAS */
+        .btn-gold { width: 100%; padding: 18px; background: linear-gradient(135deg, #BF953F, #FCF6BA, #AA771C); border: 1px solid #7a5a12; border-radius: 14px; color: #0c1628; font-weight: 800; font-size: 14px; text-transform: uppercase; cursor: pointer; }
+        #calc-screen { background: var(--screen-bg); overflow-y: auto; }
+        .header-nav { background: #0c1628; padding: 15px 20px; color: #FCF6BA; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #BF953F; }
+        .content { padding: 15px; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .tabs-header { display: flex; gap: 8px; margin-bottom: 15px; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 12px; }
         .tab-btn { flex: 1; padding: 10px 5px; border: none; border-radius: 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; color: #888; background: transparent; cursor: pointer; }
         .tab-btn.active { background: linear-gradient(135deg, #BF953F, #FCF6BA); color: #0c1628; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
-        /* CALCULADORA */
-        #calc-screen { background: var(--screen-bg); overflow-y: auto; }
-        .header-nav { background: #0c1628; padding: 15px 20px; color: #FCF6BA; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #BF953F; }
-        .content { padding: 15px; }
-        .card { background: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        
         label { display: block; font-size: 9px; font-weight: 800; color: var(--text-label); margin-bottom: 4px; text-transform: uppercase; }
         input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid var(--input-border); border-radius: 10px; font-size: 14px; background: var(--input-bg); color: var(--text-main); }
-        
         .input-row { display: flex; gap: 8px; }
         .input-row div { flex: 1; }
         .readonly { background: var(--readonly-bg); font-weight: 700; border-color: transparent; }
-        
-        #macro-preview { 
-            width: 100%; height: 110px; border: 1.5px dashed #BF953F; border-radius: 10px; 
-            padding: 10px; font-size: 11px; background: var(--input-bg); resize: none; 
-            margin-top: 10px; color: var(--text-main);
-        }
+        #macro-preview { width: 100%; height: 110px; border: 1.5px dashed #BF953F; border-radius: 10px; padding: 10px; font-size: 11px; background: var(--input-bg); resize: none; margin-top: 10px; color: var(--text-main); line-height: 1.3; }
     </style>
 </head>
 <body>
@@ -93,7 +49,6 @@
     <div id="home-screen" class="screen active">
         <div class="button-container">
             <button class="btn-gold" onclick="nav('calc-screen')">Plano & Plano</button>
-            <button class="btn-gold" style="opacity: 0.5;">Cyrela (Em breve)</button>
         </div>
     </div>
 
@@ -132,13 +87,17 @@
                 <div id="tab-s" class="tab-content">
                     <div class="input-row">
                         <div><label>Aging (Dias)</label><input type="number" id="s-ag" placeholder="Ex: 74" oninput="calcS()"></div>
-                        <div><label>Saldo</label><input type="text" id="s-s" placeholder="R$ 0,00" oninput="mask(this, calcS)"></div>
+                        <div><label>Saldo Devedor</label><input type="text" id="s-s" placeholder="R$ 0,00" oninput="mask(this, calcS)"></div>
                     </div>
-                    <label>Faixa</label>
-                    <input type="text" id="s-c" class="readonly" readonly>
+                    <label>FAIXA DE ATRASO</label>
+                    <input type="text" id="s-c" class="readonly" readonly placeholder="Aguardando dados...">
                     <div class="input-row">
                         <div><label>Desc (%)</label><input type="text" id="s-dp" class="readonly" readonly></div>
                         <div><label>Máx Parc</label><input type="text" id="s-mp" class="readonly" readonly></div>
+                    </div>
+                    <div class="input-row">
+                        <div><label>Vlr Desconto</label><input type="text" id="s-vd" class="readonly" readonly></div>
+                        <div><label>Vlr c/ Desconto</label><input type="text" id="s-vcd" class="readonly" readonly></div>
                     </div>
                     <div class="input-row">
                         <div><label>% do Ato</label><input type="number" id="s-ap" value="1" oninput="calcS()"></div>
@@ -170,7 +129,6 @@
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.getElementById(id === 'tab-h' ? 'btn-h' : 'btn-s').classList.add('active');
-        document.getElementById('macro-preview').value = "";
     }
 
     function mask(i, cb) {
@@ -190,12 +148,20 @@
         const vA = s * (p/100), vP = (s - vA)/q;
         let m = 0;
         if(d1 && d2) m = Math.max(0, (new Date(d2).getFullYear() - new Date(d1).getFullYear()) * 12 + (new Date(d2).getMonth() - new Date(d1).getMonth()));
-        
-        document.getElementById('h-vA').value = f(vA);
-        document.getElementById('h-vP').value = f(vP);
-        document.getElementById('h-m').value = m + " meses";
+        document.getElementById('h-vA').value = f(vA); document.getElementById('h-vP').value = f(vP); document.getElementById('h-m').value = m + " meses";
+        if(s > 0) document.getElementById('macro-preview').value = `🏢 *ACORDO JBLAR*\nSaldo: ${f(s)}\nAto: ${f(vA)}\nParcelas: ${q}x ${f(vP)}`;
+    }
 
-        if(s > 0) document.getElementById('macro-preview').value = `🏢 *ACORDO HABITE-SE*\nSaldo: ${f(s)}\nAto: ${f(vA)}\nParcelas: ${q}x ${f(vP)}`;
+    function getFaixa(ag, s) {
+        if (ag >= 31 && ag <= 60) return s <= 700 ? "Aging 31 a 60 Faixa 1" : (s <= 1500 ? "Aging 31 a 60 Faixa 2" : "Aging 31 a 60 Faixa 3");
+        if (ag >= 61 && ag <= 90) return s <= 700 ? "Aging 61 a 90 Faixa 1" : (s <= 1500 ? "Aging 61 a 90 Faixa 2" : "Aging 61 a 90 Faixa 3");
+        if (ag >= 91 && ag <= 180) return s <= 700 ? "Aging 91 a 180 Faixa 1" : (s <= 1500 ? "Aging 91 a 180 Faixa 2" : (s <= 3000 ? "Aging 91 a 180 Faixa 3" : "Aging 91 a 180 Faixa 4"));
+        if (ag >= 181 && ag <= 364) return s <= 700 ? "Aging 181 a 364 Faixa 1" : (s <= 1500 ? "Aging 181 a 364 Faixa 2" : (s <= 3000 ? "Aging 181 a 364 Faixa 3" : (s <= 5000 ? "Aging 181 a 364 Faixa 4" : "Aging 181 a 364 Faixa 5")));
+        if (ag >= 365 && ag <= 730) return s <= 700 ? "Aging 365 a 730 Faixa 1" : (s <= 1500 ? "Aging 365 a 730 Faixa 2" : (s <= 3000 ? "Aging 365 a 730 Faixa 3" : (s <= 5000 ? "Aging 365 a 730 Faixa 4" : (s <= 10000 ? "Aging 365 a 730 Faixa 5" : (s <= 20000 ? "Aging 365 a 730 Faixa 6" : "Aging 365 a 730 Faixa 7")))));
+        if (ag >= 731 && ag <= 1095) return s <= 700 ? "Aging 731 a 1095 Faixa 1" : (s <= 1500 ? "Aging 731 a 1095 Faixa 2" : (s <= 3000 ? "Aging 731 a 1095 Faixa 3" : (s <= 5000 ? "Aging 731 a 1095 Faixa 4" : "Aging 731 a 1095 Faixa 5")));
+        if (ag >= 1096 && ag <= 1460) return s <= 700 ? "Aging 1096 a 1460 Faixa 1" : (s <= 1500 ? "Aging 1096 a 1460 Faixa 2" : (s <= 3000 ? "Aging 1096 a 1460 Faixa 3" : (s <= 5000 ? "Aging 1096 a 1460 Faixa 4" : "Aging 1096 a 1460 Faixa 5")));
+        if (ag > 1460) return s <= 700 ? "Aging Maior 1460 Faixa 1" : (s <= 1500 ? "Aging Maior 1460 Faixa 2" : (s <= 3000 ? "Aging Maior 1460 Faixa 3" : (s <= 5000 ? "Aging Maior 1460 Faixa 4" : (s <= 10000 ? "Aging Maior 1460 Faixa 5" : (s <= 20000 ? "Aging Maior 1460 Faixa 6" : "Aging Maior 1460 Faixa 7")))));
+        return "";
     }
 
     function calcS() {
@@ -203,26 +169,18 @@
         const s = parseFloat(document.getElementById('s-s').value.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
         const ap = parseFloat(document.getElementById('s-ap').value) || 0;
         const qp = parseInt(document.getElementById('s-qp').value) || 1;
+        const fx = getFaixa(ag, s);
+        let d = 0, mp = 3;
+        if(fx.includes("31 a 60")) d = 0.05; else if(fx.includes("61 a 90")) d = 0.10; else if(fx.includes("91 a 180")) d = 0.15; else if(fx.includes("181 a 364")) d = 0.25; else if(fx.includes("365 a 730")) d = 0.30; else if(fx.includes("731 a 1095")) d = 0.50; else if(fx.includes("1096 a 1460")) d = 0.60; else if(fx.includes("Maior 1460")) d = 0.70;
+        
+        const parcMap = {"31 a 60 Faixa 3":8,"61 a 90 Faixa 3":6,"91 a 180 Faixa 4":12,"181 a 364 Faixa 5":20,"365 a 730 Faixa 7":60,"Maior 1460 Faixa 7":60};
+        Object.keys(parcMap).forEach(k => { if(fx.includes(k)) mp = parcMap[k]; });
 
-        let desc = 0, mp = 3, fa = "Aguardando";
-        if(ag >= 31 && ag <= 180) { desc = 0.10; mp = 6; fa = "Curto Prazo"; }
-        else if(ag > 180) { desc = 0.30; mp = 24; fa = "Longo Prazo"; }
+        const vD = s * d, vCD = s - vD, vA = vCD * (ap/100), vP = (vCD - vA)/qp;
+        document.getElementById('s-c').value = fx; document.getElementById('s-dp').value = (d*100) + "%"; document.getElementById('s-mp').value = mp;
+        document.getElementById('s-vd').value = f(vD); document.getElementById('s-vcd').value = f(vCD); document.getElementById('s-va').value = f(vA); document.getElementById('s-vp').value = f(vP);
 
-        const vD = s * desc, vCD = s - vD, vA = vCD * (ap/100), vP = (vCD - vA)/qp;
-        document.getElementById('s-c').value = fa;
-        document.getElementById('s-dp').value = (desc*100) + "%";
-        document.getElementById('s-mp').value = mp;
-        document.getElementById('s-va').value = f(vA);
-        document.getElementById('s-vp').value = f(vP);
-
-        if(s > 0) document.getElementById('macro-preview').value = `🤝 *OFERTA SERASA*\nSaldo: ${f(s)}\nFinal: ${f(vCD)}\nAto: ${f(vA)}\nPlano: ${qp}x ${f(vP)}`;
+        if(s > 0) document.getElementById('macro-preview').value = `🤝 *CAMPANHA SERASA*\nSaldo: ${f(s)}\nDesconto: ${f(vD)}\nValor Final: ${f(vCD)}\nAto: ${f(vA)}\nParcelas: ${qp}x de ${f(vP)}`;
     }
 
-    function copy() {
-        const t = document.getElementById('macro-preview');
-        if(!t.value) return;
-        navigator.clipboard.writeText(t.value).then(() => alert("Copiado!"));
-    }
-</script>
-</body>
-</html>
+    function copy() { const t = document.getElementById('macro-preview'); if(t.value) { navigator.clipboard.writeText(
