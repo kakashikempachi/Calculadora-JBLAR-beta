@@ -179,4 +179,46 @@
         if (ag >= 61 && ag <= 90) return s <= 1500 ? "Aging 61 a 90 Faixa 2" : "Aging 61 a 90 Faixa 3";
         if (ag >= 91 && ag <= 180) return s <= 3000 ? "Aging 91 a 180 Faixa 3" : "Aging 91 a 180 Faixa 4";
         if (ag >= 181 && ag <= 364) return s <= 5000 ? "Aging 181 a 364 Faixa 4" : "Aging 181 a 364 Faixa 5";
-        if (ag >= 365 && ag <= 730) return s <= 20000 ? "Aging 365 a 730 Faixa 6" : "Aging 365 a 7
+        if (ag >= 365 && ag <= 730) return s <= 20000 ? "Aging 365 a 730 Faixa 6" : "Aging 365 a 730 Faixa 7";
+        if (ag >= 731 && ag <= 1095) return s <= 5000 ? "Aging 731 a 1095 Faixa 4" : "Aging 731 a 1095 Faixa 5";
+        if (ag > 1095) return "Aging Master Faixa 7";
+        return "";
+    }
+
+    function calcS() {
+        const ag = parseInt(document.getElementById('s-ag').value) || 0;
+        const sRaw = document.getElementById('s-s').value;
+        const s = parseFloat(sRaw.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+        const macro = document.getElementById('macro-s');
+        if (s <= 0 || !ag) { macro.value = ""; return; }
+        
+        const fx = getFaixa(ag, s);
+        let d = 0, mp = 3;
+        
+        // Regras de Desconto e Parcelas Máximas (Baseadas na Planilha)
+        if(fx.includes("31 a 60")) { d = 0.05; mp = fx.includes("Faixa 3") ? 8 : 4; }
+        else if(fx.includes("61 a 90")) { d = 0.10; mp = fx.includes("Faixa 3") ? 6 : 4; }
+        else if(fx.includes("91 a 180")) { d = 0.15; mp = fx.includes("Faixa 4") ? 12 : 6; }
+        else if(fx.includes("181 a 364")) { d = 0.25; mp = fx.includes("Faixa 5") ? 20 : 12; }
+        else if(fx.includes("365 a 730")) { d = 0.30; mp = fx.includes("Faixa 7") ? 60 : 24; }
+        else if(fx.includes("731 a 1095")) { d = 0.50; mp = 24; }
+        else if(fx.includes("Master")) { d = 0.70; mp = 60; }
+
+        const vD = s * d, vCD = s - vD, ap = parseFloat(document.getElementById('s-ap').value) || 0;
+        const vA = vCD * (ap/100), qp = parseInt(document.getElementById('s-qp').value) || 1, vP = (vCD - vA)/qp;
+
+        document.getElementById('s-c').value = fx; 
+        document.getElementById('s-dp').value = (d*100) + "%"; 
+        document.getElementById('s-mp').value = mp; // Aqui foi corrigido a exibição
+        document.getElementById('s-vd').value = f(vD); 
+        document.getElementById('s-vcd').value = f(vCD); 
+        document.getElementById('s-va').value = f(vA); 
+        document.getElementById('s-vp').value = f(vP);
+
+        macro.value = `🤝 *CAMPANHA SERASA - JBLAR*\n\n💰 Saldo Total: ${f(s)}\n📉 Desconto (${(d*100)}%): ${f(vD)}\n✅ Saldo com Desconto: ${f(vCD)}\n\n💵 Pagamento de ATO: ${f(vA)}\n📅 Parcelado em: ${qp}x de ${f(vP)}\n\n⚠️ O não pagamento do boleto do ATO até a data combinada acarretará na perda da oferta com desconto.`;
+    }
+
+    function copy(id) { const t = document.getElementById(id); if(t.value) { navigator.clipboard.writeText(t.value).then(() => alert("Acordo copiado!")); } }
+</script>
+</body>
+</html>
