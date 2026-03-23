@@ -1,157 +1,104 @@
-<div id="tab-serasa" class="tab-content">
-                    <div class="input-row">
-                        <div><label>Aging (Dias)</label><input type="number" id="s-aging" placeholder="Ex: 74" oninput="calcSerasa()"></div>
-                        <div><label>Saldo Devedor (R$)</label><input type="text" id="s-saldo" placeholder="R$ 0,00" oninput="maskSerasa(this)"></div>
-                    </div>
-                    
-                    <label>Carteira Identificada</label>
-                    <input type="text" id="s-carteira" class="readonly" readonly placeholder="Aguardando dados...">
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JBLAR - Simulador de Acordos</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0c1628">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR/refs/heads/main/file_000000002f64720e9e886d9bc8e6a94f.png">
 
-                    <div class="input-row">
-                        <div><label>Desconto (%)</label><input type="text" id="s-desc-perc" class="readonly" readonly></div>
-                        <div><label>Máx. Parcelas</label><input type="text" id="s-max-p" class="readonly" readonly></div>
-                    </div>
-
-                    <div class="input-row">
-                        <div><label>Valor Desconto</label><input type="text" id="s-v-desc" class="readonly" readonly></div>
-                        <div><label>Saldo c/ Desconto</label><input type="text" id="s-v-com-desc" class="readonly" readonly></div>
-                    </div>
-
-                    <div class="input-row">
-                        <div><label>% do Ato</label><input type="number" id="s-ato-perc" value="1" oninput="calcSerasa()"></div>
-                        <div><label>Valor do Ato</label><input type="text" id="s-v-ato" class="readonly" readonly></div>
-                    </div>
-
-                    <div class="input-row">
-                        <div><label>Qtd. Parcelas</label><input type="number" id="s-q-p" value="1" oninput="calcSerasa()"></div>
-                        <div><label>Valor Parcela</label><input type="text" id="s-v-p" class="readonly" readonly></div>
-                    </div>
-                </div>
-<script>
-    // --- LÓGICA SERASA ---
-    function maskSerasa(i) {
-        let v = i.value.replace(/\D/g,'');
-        v = (v/100).toFixed(2).replace(".", ",").replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,").replace(/(\d)(\d{3}),/g, "$1.$2,");
-        i.value = v !== "0,00" ? "R$ " + v : "";
-        calcSerasa();
-    }
-
-    function getCarteira(aging, saldo) {
-        if (aging >= 31 && aging <= 60) {
-            if (saldo <= 700) return "Aging 31 a 60 Faixa 1";
-            if (saldo <= 1500) return "Aging 31 a 60 Faixa 2";
-            return "Aging 31 a 60 Faixa 3";
+    <style>
+        :root { 
+            --gold-dark: #AA771C;
+            --gold-mid: #BF953F;
+            --gold-light: #FCF6BA;
+            --bg-deep-blue: #0c1628;
+            --screen-bg: rgba(245, 247, 250, 0.98);
+            --card-bg: white;
+            --text-main: #333;
+            --text-label: #888;
+            --input-bg: #fdfdfd;
+            --input-border: #e1e4e8;
+            --readonly-bg: #f1f3f5;
         }
-        if (aging >= 61 && aging <= 90) {
-            if (saldo <= 700) return "Aging 61 a 90 Faixa 1";
-            if (saldo <= 1500) return "Aging 61 a 90 Faixa 2";
-            return "Aging 61 a 90 Faixa 3";
-        }
-        if (aging >= 91 && aging <= 180) {
-            if (saldo <= 700) return "Aging 91 a 180 Faixa 1";
-            if (saldo <= 1500) return "Aging 91 a 180 Faixa 2";
-            if (saldo <= 3000) return "Aging 91 a 180 Faixa 3";
-            return "Aging 91 a 180 Faixa 4";
-        }
-        if (aging >= 181 && aging <= 364) {
-            if (saldo <= 700) return "Aging 181 a 364 Faixa 1";
-            if (saldo <= 1500) return "Aging 181 a 364 Faixa 2";
-            if (saldo <= 3000) return "Aging 181 a 364 Faixa 3";
-            if (saldo <= 5000) return "Aging 181 a 364 Faixa 4";
-            return "Aging 181 a 364 Faixa 5";
-        }
-        if (aging >= 365 && aging <= 730) {
-            if (saldo <= 700) return "Aging 365 a 730 Faixa 1";
-            if (saldo <= 1500) return "Aging 365 a 730 Faixa 2";
-            if (saldo <= 3000) return "Aging 365 a 730 Faixa 3";
-            if (saldo <= 5000) return "Aging 365 a 730 Faixa 4";
-            if (saldo <= 10000) return "Aging 365 a 730 Faixa 5";
-            if (saldo <= 20000) return "Aging 365 a 730 Faixa 6";
-            return "Aging 365 a 730 Faixa 7";
-        }
-        if (aging >= 731 && aging <= 1095) {
-            if (saldo <= 700) return "Aging 731 a 1095 Faixa 1";
-            if (saldo <= 1500) return "Aging 731 a 1095 Faixa 2";
-            if (saldo <= 3000) return "Aging 731 a 1095 Faixa 3";
-            if (saldo <= 5000) return "Aging 731 a 1095 Faixa 4";
-            return "Aging 731 a 1095 Faixa 5";
-        }
-        if (aging >= 1096 && aging <= 1460) {
-            if (saldo <= 700) return "Aging 1096 a 1460 Faixa 1";
-            if (saldo <= 1500) return "Aging 1096 a 1460 Faixa 2";
-            if (saldo <= 3000) return "Aging 1096 a 1460 Faixa 3";
-            if (saldo <= 5000) return "Aging 1096 a 1460 Faixa 4";
-            return "Aging 1096 a 1460 Faixa 5";
-        }
-        if (aging > 1460) {
-            if (saldo <= 700) return "Aging Maior 1460 Faixa 1";
-            if (saldo <= 1500) return "Aging Maior 1460 Faixa 2";
-            if (saldo <= 3000) return "Aging Maior 1460 Faixa 3";
-            if (saldo <= 5000) return "Aging Maior 1460 Faixa 4";
-            if (saldo <= 10000) return "Aging Maior 1460 Faixa 5";
-            if (saldo <= 20000) return "Aging Maior 1460 Faixa 6";
-            return "Aging Maior 1460 Faixa 7";
-        }
-        return "";
-    }
 
-    function calcSerasa() {
-        const aging = parseInt(document.getElementById('s-aging').value) || 0;
-        const saldoTotal = parseFloat(document.getElementById('s-saldo').value.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
-        const atoPerc = parseFloat(document.getElementById('s-ato-perc').value) || 0;
-        const qtdP = parseInt(document.getElementById('s-q-p').value) || 1;
+        .dark-theme {
+            --screen-bg: #0c1628;
+            --card-bg: #16243d;
+            --text-main: #f0f0f0;
+            --text-label: #FCF6BA;
+            --input-bg: #1f2d47;
+            --input-border: #3a4b6b;
+            --readonly-bg: #09101d;
+        }
 
-        const carteira = getCarteira(aging, saldoTotal);
-        document.getElementById('s-carteira').value = carteira;
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-        let desc = 0;
-        let maxP = 0;
+        body { 
+            background-color: var(--bg-deep-blue); 
+            height: 100vh; width: 100vw;
+            overflow: hidden; 
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            display: flex; justify-content: center; align-items: center;
+        }
 
-        // Lógica de Desconto (B7)
-        if (carteira.includes("31 a 60")) desc = 0.05;
-        else if (carteira.includes("61 a 90")) desc = 0.10;
-        else if (carteira.includes("91 a 180")) desc = 0.15;
-        else if (carteira.includes("181 a 364")) desc = 0.25;
-        else if (carteira.includes("365 a 730")) desc = 0.30;
-        else if (carteira.includes("731 a 1095")) desc = 0.50;
-        else if (carteira.includes("1096 a 1460")) desc = 0.60;
-        else if (carteira.includes("Maior 1460")) desc = 0.70;
+        #app-container { 
+            width: 100%; max-width: 480px; height: 100%;
+            position: relative;
+            background-image: url('https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR/refs/heads/main/file_000000002f64720e9e886d9bc8e6a94f.png');
+            background-size: cover; background-position: center top;
+            background-color: var(--bg-deep-blue);
+            box-shadow: 0 0 50px rgba(0,0,0,0.9);
+        }
 
-        // Lógica de Parcelas (B8) - Mapeamento exato da sua planilha
-        const parcelasMap = {
-            "Aging 31 a 60 Faixa 3": 8, "Aging 61 a 90 Faixa 3": 6, "Aging 91 a 180 Faixa 3": 6, "Aging 91 a 180 Faixa 4": 12,
-            "Aging 181 a 364 Faixa 3": 6, "Aging 181 a 364 Faixa 4": 12, "Aging 181 a 364 Faixa 5": 20,
-            "Aging 365 a 730 Faixa 3": 7, "Aging 365 a 730 Faixa 4": 12, "Aging 365 a 730 Faixa 5": 20, "Aging 365 a 730 Faixa 6": 36, "Aging 365 a 730 Faixa 7": 60,
-            "Aging 731 a 1095 Faixa 3": 7, "Aging 731 a 1095 Faixa 4": 12, "Aging 731 a 1095 Faixa 5": 36,
-            "Aging 1096 a 1460 Faixa 3": 6, "Aging 1096 a 1460 Faixa 4": 12, "Aging 1096 a 1460 Faixa 5": 54,
-            "Aging Maior 1460 Faixa 2": 4, "Aging Maior 1460 Faixa 3": 6, "Aging Maior 1460 Faixa 4": 12, "Aging Maior 1460 Faixa 5": 24, "Aging Maior 1460 Faixa 6": 36, "Aging Maior 1460 Faixa 7": 60
-        };
-        maxP = parcelasMap[carteira] || 3;
+        .screen { display: none; width: 100%; height: 100%; position: relative; flex-direction: column; z-index: 10; }
+        .screen.active { display: flex; }
 
-        const vDesc = saldoTotal * desc;
-        const vComDesc = saldoTotal - vDesc;
-        const vAto = vComDesc * (atoPerc / 100);
-        const vReman = vComDesc - vAto;
-        const vParcela = vReman / qtdP;
+        #home-screen {
+            justify-content: flex-end; 
+            background: linear-gradient(to bottom, transparent 30%, rgba(12, 22, 40, 0.8) 100%);
+            padding-bottom: 60px;
+        }
 
-        const f = (n) => n.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+        .button-container { width: 100%; padding: 0 35px; display: flex; flex-direction: column; gap: 18px; }
+
+        .btn-gold {
+            width: 100%; padding: 18px;
+            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 30%, #B38728 50%, #FBF5B7 70%, #AA771C 100%);
+            background-size: 200% auto;
+            border: 1px solid #7a5a12; border-radius: 14px;
+            color: #0c1628; font-weight: 800; font-size: 15px;
+            text-transform: uppercase; letter-spacing: 1.2px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 0 12px rgba(255, 255, 255, 0.5);
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-gold:active { transform: scale(0.95); background-position: right center; }
+
+        /* ABAS */
+        .tabs-header { display: flex; gap: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 15px; }
+        .tab-btn { flex: 1; padding: 12px 5px; border: none; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; color: #888; background: transparent; transition: 0.3s; }
+        .tab-btn.active { background: linear-gradient(135deg, #BF953F, #FCF6BA); color: #0c1628; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* CONTEÚDO */
+        #calc-screen { background: var(--screen-bg); overflow-y: auto; }
+        .header-nav { background-color: #0c1628; padding: 20px; color: #FCF6BA; font-weight: bold; display: flex; align-items: center; border-bottom: 3px solid #BF953F; justify-content: space-between; }
+        .content { padding: 20px; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
         
-        document.getElementById('s-desc-perc').value = (desc * 100).toFixed(0) + "%";
-        document.getElementById('s-max-p').value = maxP;
-        document.getElementById('s-v-desc').value = f(vDesc);
-        document.getElementById('s-v-com-desc').value = f(vComDesc);
-        document.getElementById('s-v-ato').value = f(vAto);
-        document.getElementById('s-v-p').value = f(vParcela);
-
-        if(saldoTotal > 0) {
-            document.getElementById('macro-preview').value = 
-                `🤝 *OFERTA CAMPANHA SERASA - JBLAR*\n\n` +
-                `💰 *Saldo Devedor Total:* ${f(saldoTotal)}\n` +
-                `📉 *Desconto aplicado:* ${(desc*100)}% (${f(vDesc)})\n` +
-                `✅ *Saldo com desconto:* ${f(vComDesc)}\n\n` +
-                `💵 *Pagamento de ATO:* ${f(vAto)}\n` +
-                `📅 *Parcelamento:* ${qtdP}x de ${f(vParcela)}\n\n` +
-                `⚠️ *Atenção:* O não pagamento do ATO acarreta na perda desta oferta e possíveis medidas judiciais.`;
+        label { display: block; font-size: 10px; font-weight: 800; color: var(--text-label); margin-bottom: 5px; text-transform: uppercase; }
+        input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid var(--input-border); border-radius: 12px; font-size: 15px; background: var(--input-bg); color: var(--text-main); }
+        
+        .input-row { display: flex; gap: 10px; }
+        .input-row div { flex: 1; }
+        .readonly { background: var(--readonly-bg); font-weight: 700; border-color: transparent; }
+        
+        #macro-preview { 
+            width: 100%; height: 120px; border: 2px dashed #BF953F; border-radius: 12px; 
+            padding: 12px; font-size: 11px; background: var(--input-bg); resize: none; 
+            margin-top: 15px; color: var(--text-main); line-height: 1.4;
         }
-    }
-</script>
+        .theme-toggle { cursor: pointer; font-size: 20px;
