@@ -1,15 +1,254 @@
-<div class="row-datas" style="display: flex; gap: 10px; margin-top: 20px;">
-    <div style="flex: 1;">
-        <label class="label">Data Inicial:</label>
-        <input type="date" id="c3" class="input-box input-manual">
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JBLAR - Simulador</title>
+    <style>
+        /* DEFINIÇÃO DAS CORES OFICIAIS EXTRAÍDAS DA IMAGEM */
+        :root { 
+            /* Cores base para transições e bordas */
+            --jbiar-gold-base: #AA771C; 
+            /* Azul profundo de fundo para áreas de preenchimento */
+            --bg-deep-blue: #0c1628; 
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body { 
+            background-color: var(--bg-deep-blue); 
+            height: 100vh; width: 100vw;
+            overflow: hidden; 
+            font-family: 'Segoe UI', sans-serif;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* CONTAINER ADAPTATIVO UNIFICADO */
+        #app-container { 
+            width: 100%; 
+            max-width: 480px;
+            height: 100%;
+            position: relative;
+            background-image: url('https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR/refs/heads/main/file_000000002f64720e9e886d9bc8e6a94f.png');
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            background-color: var(--bg-deep-blue);
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+
+        .screen { display: none; width: 100%; height: 100%; position: relative; flex-direction: column; }
+        .screen.active { display: flex; }
+
+        /* ========================================= */
+        /* TELA HOME: DESIGN UNIFORME COM A ARTE */
+        /* ========================================= */
+        #home-screen {
+            justify-content: flex-end; 
+            background: linear-gradient(to bottom, transparent 40%, rgba(12, 22, 40, 0.7) 100%);
+            padding-bottom: 50px;
+        }
+
+        .button-container {
+            width: 100%;
+            padding: 0 35px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* ========================================= */
+        /* BOTÃO COM ASPECTO BRILHOSO E METÁLICO (OURO) */
+        /* ========================================= */
+        .btn-gold {
+            width: 100%;
+            padding: 18px;
+            /* DEGRADÊ COMPLEXO PARA EFEITO METÁLICO (BF953F, FCF6BA, B38728, FBF5B7, AA771C) */
+            background: linear-gradient(135deg, 
+                #BF953F 0%, 
+                #FCF6BA 25%, 
+                #B38728 50%, 
+                #FBF5B7 75%, 
+                #AA771C 100%);
+            background-size: 200% auto; /* Para animação sutil */
+            border: 1px solid #AA771C; /* Borda definida */
+            border-radius: 12px;
+            
+            /* Contraste profissional: Azul profundo extraído do fundo */
+            color: #0c1628; 
+            font-weight: 800;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            
+            /* Sombra projetada e brilho sutil (shadow-gold) */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5), inset 0 0 10px rgba(251, 245, 183, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Efeito de brilho ao passar o mouse ou tocar */
+        .btn-gold:hover, .btn-gold:active {
+            background-position: right center; /* Move o degradê */
+            transform: scale(0.97); 
+            box-shadow: 0 5px 15px rgba(170, 119, 28, 0.6), inset 0 0 15px rgba(251, 245, 183, 0.6);
+        }
+
+        /* Botão desabilitado com efeito Glassmorphism */
+        .btn-disabled {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            color: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* ========================================= */
+        /* TELA CÁLCULO: RESPONSIVA E LIMPA */
+        /* ========================================= */
+        #calc-screen { 
+            background: rgba(245, 247, 250, 0.98); 
+            overflow-y: auto; 
+            color: #333;
+        }
+
+        .header-nav {
+            background-color: #0c1628;
+            padding: 18px 25px;
+            color: #E1CAAF;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            border-bottom: 3px solid #BF953F;
+        }
+
+        .content { padding: 20px; }
+        .card { 
+            background: white; 
+            padding: 22px; 
+            border-radius: 18px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        }
+
+        h2 { color: #0c1628; font-size: 18px; margin-bottom: 20px; text-align: center; }
+
+        label { display: block; font-size: 10px; font-weight: 800; color: #999; margin-bottom: 5px; text-transform: uppercase; }
+        
+        input { 
+            width: 100%; padding: 14px; margin-bottom: 15px; 
+            border: 1px solid #e1e4e8; border-radius: 10px; 
+            font-size: 16px; background: #fdfdfd; color: #2c3e50;
+        }
+
+        .input-row { display: flex; gap: 12px; }
+        .input-row div { flex: 1; }
+        .readonly { background: #f8f9fa; color: #111; font-weight: 700; border-color: #eee; }
+
+        #macro-preview { 
+            width: 100%; height: 130px; border: 2px dashed #BF953F; 
+            border-radius: 12px; padding: 12px; font-size: 13px; 
+            background: #fffdf9; resize: none; margin-top: 10px; line-height: 1.5;
+            color: #444;
+        }
+
+        .btn-green { 
+            width: 100%; padding: 20px; background: #228b43; 
+            color: white; border: none; border-radius: 15px; 
+            font-weight: bold; margin-top: 20px; font-size: 16px; 
+            box-shadow: 0 8px 20px rgba(34, 139, 67, 0.3);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    
+    <div id="home-screen" class="screen active">
+        <div class="button-container">
+            <button class="btn-gold" onclick="irPara('calc-screen')">Plano & Plano</button>
+            <button class="btn-gold btn-disabled">Cyrela (Em breve)</button>
+        </div>
     </div>
-    <div style="flex: 1;">
-        <label class="label">Data Habite-se:</label>
-        <input type="date" id="d3" class="input-box input-manual">
+
+    <div id="calc-screen" class="screen">
+        <div class="header-nav">
+            <span onclick="irPara('home-screen')" style="cursor:pointer; padding: 5px 15px 5px 0;">❮ Voltar</span>
+            <span>SIMULADOR DE COBRANÇA</span>
+        </div>
+        <div class="content">
+            <div class="card">
+                <h2>Cálculo de Acordo</h2>
+                <label>Saldo Devedor (R$)</label>
+                <input type="text" id="saldoInput" inputmode="numeric" placeholder="R$ 0,00" oninput="maskReal(this)">
+                <div class="input-row">
+                    <div><label>% do Ato</label><input type="number" id="porcInput" value="50" oninput="processar()"></div>
+                    <div><label>Valor do Ato</label><input type="text" id="vAtoResult" class="readonly" readonly></div>
+                </div>
+                <div class="input-row">
+                    <div><label>Data Início</label><input type="date" id="dataIniInput" oninput="processar()"></div>
+                    <div><label>Data Habite-se</label><input type="date" id="dataHabInput" oninput="processar()"></div>
+                </div>
+                <div class="input-row">
+                    <div><label>Meses</label><input type="text" id="mesesResult" class="readonly" readonly></div>
+                    <div><label>Parcelas</label><input type="number" id="qtdParcInput" value="3" oninput="processar()"></div>
+                </div>
+                <label>Valor da Parcela</label>
+                <input type="text" id="vParcResult" class="readonly" readonly>
+                <textarea id="macro-preview" readonly></textarea>
+                <button class="btn-green" onclick="copiarResumo()">COPIAR ACORDO (WHATSAPP)</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="row" style="margin-top: 15px;">
-    <label class="label">Meses até Habite-se:</label>
-    <input type="text" id="e3" class="input-box input-formula" readonly placeholder="Calculando...">
-</div>
+<script>
+    function irPara(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function maskReal(i) {
+        let v = i.value.replace(/\D/g,'');
+        v = (v/100).toFixed(2) + '';
+        v = v.replace(".", ",").replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,").replace(/(\d)(\d{3}),/g, "$1.$2,");
+        i.value = v !== "0,00" ? "R$ " + v : "";
+        processar();
+    }
+
+    function processar() {
+        const saldoStr = document.getElementById('saldoInput').value;
+        const saldo = parseFloat(saldoStr.replace("R$ ", "").replace(/\./g, "").replace(",", ".")) || 0;
+        const pAto = parseFloat(document.getElementById('porcInput').value) || 0;
+        const qParc = parseInt(document.getElementById('qtdParcInput').value) || 1;
+        const dIniStr = document.getElementById('dataIniInput').value;
+        const dHabStr = document.getElementById('dataHabInput').value;
+        
+        const vAto = saldo * (pAto / 100);
+        const vParc = qParc > 0 ? (saldo - vAto) / qParc : 0;
+        
+        let m = 0;
+        if (dIniStr && dHabStr) {
+            const date1 = new Date(dIniStr + 'T00:00:00');
+            const date2 = new Date(dHabStr + 'T00:00:00');
+            if (date2 > date1) {
+                m = (date2.getFullYear() - date1.getFullYear()) * 12 + (date2.getMonth() - d1.getMonth());
+            }
+        }
+        
+        const f = (n) => n.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+        document.getElementById('vAtoResult').value = f(vAto);
+        document.getElementById('vParcResult').value = f(vParc);
+        document.getElementById('mesesResult').value = m + " meses";
+        if(saldo > 0) document.getElementById('macro-preview').value = `🏢 ACORDO JBLAR:\nSaldo: ${f(saldo)}\nAto: ${f(vAto)} (${pAto}%)\nParcelas: ${qParc}x de ${f(vParc)}\nPrazo: ${m} meses`;
+    }
+
+    function copiarResumo() {
+        const txt = document.getElementById('macro-preview');
+        if(!txt.value) return alert("Simule um valor primeiro.");
+        navigator.clipboard.writeText(txt.value).then(() => alert("Resumo copiado!"));
+    }
+</script>
+</body>
+</html>
