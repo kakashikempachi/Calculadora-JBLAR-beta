@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>JBLAR - Simulador Profissional</title>
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/Calculadora-JBLAR-beta/manifest.json">
     <meta name="theme-color" content="#0c1628">
     <style>
         :root { 
@@ -209,15 +209,15 @@
 
     function copy(id) { const t = document.getElementById(id); if(t.value) { navigator.clipboard.writeText(t.value).then(() => alert("Acordo copiado!")); } }
 
-    // REGISTRO DO SERVICE WORKER (PARA FUNCIONAMENTO OFFLINE)
- if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    // Usamos './' para garantir que ele procure na pasta do projeto, não na raiz do github.io
-    navigator.serviceWorker.register('./sw.js')
-      .then(reg => console.log('SW registrado!', reg))
-      .catch(err => console.log('Erro no SW:', err));
-  });
-}
+    // AJUSTE FINAL PARA OPERA E CHROME (ESCOPO DA SUBPASTA)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        const swPath = '/Calculadora-JBLAR-beta/sw.js';
+        navigator.serviceWorker.register(swPath, { scope: '/Calculadora-JBLAR-beta/' })
+          .then(reg => console.log('Simulador JBLAR pronto para uso offline!'))
+          .catch(err => console.error('Erro ao carregar offline:', err));
+      });
+    }
 </script>
 </body>
 </html>
