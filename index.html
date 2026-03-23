@@ -22,27 +22,18 @@
         
         body { 
             background-color: #050a14; 
-            height: 100vh; 
-            width: 100vw; 
-            overflow: hidden; 
-            font-family: sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
+            height: 100vh; width: 100vw; 
+            overflow: hidden; font-family: sans-serif; 
+            display: flex; justify-content: center; align-items: center; 
         }
 
         #app-container { 
-            width: 100%; 
-            max-width: 380px; 
-            height: 100%; 
-            max-height: 800px; 
+            width: 100%; max-width: 380px; 
+            height: 100%; max-height: 800px; 
             position: relative; 
-            /* Nova imagem de fundo com logo atualizado */
             background-image: url('https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR-beta/refs/heads/main/file_000000002f64720e9e886d9bc8e6a94f.png'); 
-            background-size: cover; 
-            background-position: center; 
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-            border-radius: 10px;
+            background-size: cover; background-position: center; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 10px;
         }
 
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; }
@@ -112,8 +103,8 @@
                     <button class="tab-btn" id="btn-s" onclick="switchTab('tab-s')">SERASA</button>
                 </div>
 
-                <div id="tab-h" class="tab-content active">
-                    <button class="btn-clear" onclick="clearTab('h')">🧹 Limpar Acordo</button>
+                <div id="tab-h" class="tab-content">
+                    <button class="btn-clear" onclick="clearInputs()">🧹 Limpar Acordo</button>
                     <label>Saldo Devedor</label>
                     <input type="text" id="h-saldo" placeholder="R$ 0,00" oninput="mask(this, calcH)">
                     <div class="input-row">
@@ -130,18 +121,18 @@
                     </div>
                     <label>Valor Parcela</label>
                     <input type="text" id="h-vP" class="readonly" readonly>
-                    <textarea id="macro-h" class="macro-preview" readonly placeholder="Aguardando dados..."></textarea>
+                    <textarea id="macro-h" class="macro-preview" readonly></textarea>
                     <button class="btn-gold" style="margin-top: 8px; width: 100%;" onclick="copy('macro-h')">COPIAR ACORDO</button>
                 </div>
 
                 <div id="tab-s" class="tab-content" style="display:none;">
-                    <button class="btn-clear" onclick="clearTab('s')">🧹 Limpar Acordo</button>
+                    <button class="btn-clear" onclick="clearInputs()">🧹 Limpar Acordo</button>
                     <div class="input-row">
-                        <div><label>Aging (Dias)</label><input type="number" id="s-ag" placeholder="Ex: 74" oninput="calcS()"></div>
-                        <div><label>Saldo Devedor</label><input type="text" id="s-s" placeholder="R$ 0,00" oninput="mask(this, calcS)"></div>
+                        <div><label>Aging (Dias)</label><input type="number" id="s-ag" oninput="calcS()"></div>
+                        <div><label>Saldo Devedor</label><input type="text" id="s-s" oninput="mask(this, calcS)"></div>
                     </div>
                     <label>FAIXA DE ATRASO</label>
-                    <input type="text" id="s-c" class="readonly" readonly placeholder="Aguardando...">
+                    <input type="text" id="s-c" class="readonly" readonly>
                     <div class="input-row">
                         <div><label>Desc (%)</label><input type="text" id="s-dp" class="readonly" readonly></div>
                         <div><label>Máx Parc</label><input type="text" id="s-mp" class="readonly" readonly></div>
@@ -158,7 +149,7 @@
                         <div><label>Qtd Parc</label><input type="number" id="s-qp" value="1" oninput="calcS()"></div>
                         <div><label>Vlr Parc</label><input type="text" id="s-vp" class="readonly" readonly></div>
                     </div>
-                    <textarea id="macro-s" class="macro-preview" readonly placeholder="Aguardando dados..."></textarea>
+                    <textarea id="macro-s" class="macro-preview" readonly></textarea>
                     <button class="btn-gold" style="margin-top: 8px; width: 100%;" onclick="copy('macro-s')">COPIAR ACORDO</button>
                 </div>
             </div>
@@ -181,29 +172,59 @@
         v = (v/100).toFixed(2).replace(".", ",").replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,").replace(/(\d)(\d{3}),/g, "$1.$2,");
         i.value = v !== "0,00" ? "R$ " + v : ""; cb();
     }
-    function clearTab(type) { location.reload(); }
+    function clearInputs() { location.reload(); }
 
     function calcH() {
         const sRaw = document.getElementById('h-saldo').value;
         const s = parseFloat(sRaw.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
-        if (s <= 0) return;
-        const p = parseFloat(document.getElementById('h-p').value) || 0, q = parseInt(document.getElementById('h-q').value) || 1;
-        const vA = s * (p/100), vP = (s - vA)/q;
-        document.getElementById('h-vA').value = f(vA); document.getElementById('h-vP').value = f(vP);
-        document.getElementById('macro-h').value = `🏢 *ACORDO JBLAR*\n💰 Saldo: ${f(s)}\n🤝 Ato: ${f(vA)}\n📅 Parc: ${q}x de ${f(vP)}`;
+        const d1 = new Date(document.getElementById('h-d1').value);
+        const d2 = new Date(document.getElementById('h-d2').value);
+        
+        let m = 0;
+        if (!isNaN(d1) && !isNaN(d2)) {
+            m = (d2.getFullYear() - d1.getFullYear()) * 12 + (d2.getMonth() - d1.getMonth());
+            document.getElementById('h-m').value = m > 0 ? m : 0;
+        }
+
+        if (s > 0) {
+            const p = parseFloat(document.getElementById('h-p').value) || 0;
+            const q = parseInt(document.getElementById('h-q').value) || 1;
+            const vA = s * (p/100);
+            const vP = (s - vA)/q;
+            document.getElementById('h-vA').value = f(vA);
+            document.getElementById('h-vP').value = f(vP);
+            document.getElementById('macro-h').value = `🏢 *ACORDO JBLAR*\n💰 Saldo: ${f(s)}\n🤝 Ato: ${f(vA)}\n📅 Parc: ${q}x de ${f(vP)}`;
+        }
     }
 
     function calcS() {
         const ag = parseInt(document.getElementById('s-ag').value) || 0;
         const sRaw = document.getElementById('s-s').value;
         const s = parseFloat(sRaw.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
-        if (s <= 0 || !ag) return;
-        let d = 0.10; 
-        const vD = s * d, vCD = s - vD, ap = parseFloat(document.getElementById('s-ap').value) || 0;
-        const vA = vCD * (ap/100), qp = parseInt(document.getElementById('s-qp').value) || 1, vP = (vCD - vA)/qp;
-        document.getElementById('s-vd').value = f(vD); document.getElementById('s-vcd').value = f(vCD);
-        document.getElementById('s-va').value = f(vA); document.getElementById('s-vp').value = f(vP);
-        document.getElementById('macro-s').value = `🤝 *CAMPANHA SERASA*\n💰 Saldo: ${f(s)}\n📉 Desc: ${f(vD)}\n💵 Ato: ${f(vA)}\n📅 ${qp}x de ${f(vP)}`;
+        
+        let d = 0, mp = 1, txt = "Aguardando...";
+        if (ag >= 1 && ag <= 30) { txt = "FAIXA 1"; d = 0.10; mp = 6; }
+        else if (ag >= 31 && ag <= 60) { txt = "FAIXA 2"; d = 0.15; mp = 12; }
+        else if (ag >= 61 && ag <= 90) { txt = "FAIXA 3"; d = 0.20; mp = 18; }
+        else if (ag > 90) { txt = "FAIXA CRÍTICA"; d = 0.30; mp = 24; }
+
+        document.getElementById('s-c').value = txt;
+        document.getElementById('s-dp').value = (d*100) + "%";
+        document.getElementById('s-mp').value = mp;
+
+        if (s > 0) {
+            const vD = s * d, vCD = s - vD;
+            const ap = parseFloat(document.getElementById('s-ap').value) || 0;
+            const vA = vCD * (ap/100);
+            const qp = parseInt(document.getElementById('s-qp').value) || 1;
+            const vP = (vCD - vA)/qp;
+            
+            document.getElementById('s-vd').value = f(vD);
+            document.getElementById('s-vcd').value = f(vCD);
+            document.getElementById('s-va').value = f(vA);
+            document.getElementById('s-vp').value = f(vP);
+            document.getElementById('macro-s').value = `🤝 *CAMPANHA SERASA*\n💰 Saldo: ${f(s)}\n📉 Desc: ${f(vD)}\n💵 Ato: ${f(vA)}\n📅 ${qp}x de ${f(vP)}`;
+        }
     }
 
     function copy(id) { 
@@ -213,12 +234,9 @@
         alert("Copiado!"); 
     }
 
-    // Registro do Service Worker com escopo absoluto
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/Calculadora-JBLAR-beta/sw.js', { scope: '/Calculadora-JBLAR-beta/' })
-          .then(reg => console.log('SW ativo!', reg))
-          .catch(err => console.log('Erro no SW:', err));
+        navigator.serviceWorker.register('/Calculadora-JBLAR-beta/sw.js', { scope: '/Calculadora-JBLAR-beta/' });
       });
     }
 </script>
