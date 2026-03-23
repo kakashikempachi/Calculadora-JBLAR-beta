@@ -210,11 +210,12 @@
     function copy(id) { const t = document.getElementById(id); if(t.value) { navigator.clipboard.writeText(t.value).then(() => alert("Acordo copiado!")); } }
 
     // REGISTRO DO SERVICE WORKER (PARA FUNCIONAMENTO OFFLINE)
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js');
-      });
-    }
+   if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    // Caminho sem a barra inicial para funcionar dentro do subdiretório do GitHub
+    navigator.serviceWorker.register('sw.js');
+  });
+}
 </script>
 </body>
 </html>
