@@ -20,7 +20,6 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         
-        /* Ajuste de tela para Windows/PWA */
         body { 
             background-color: #050a14; 
             height: 100vh; 
@@ -34,11 +33,12 @@
 
         #app-container { 
             width: 100%; 
-            max-width: 380px; /* Largura compacta para evitar sobras */
+            max-width: 380px; 
             height: 100%; 
-            max-height: 800px; /* Altura ideal para desktop */
+            max-height: 800px; 
             position: relative; 
-            background-image: url('https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR-beta/main/file_00000000f8f071f5aeda435cd37b99f6.png'); 
+            /* Nova imagem de fundo com logo atualizado */
+            background-image: url('https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR-beta/refs/heads/main/file_000000002f64720e9e886d9bc8e6a94f.png'); 
             background-size: cover; 
             background-position: center; 
             box-shadow: 0 0 50px rgba(0,0,0,0.8);
@@ -167,7 +167,6 @@
 </div>
 
 <script>
-    // Lógica de navegação e cálculos (mantida e otimizada)
     const f = (n) => n.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
     function nav(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
     function switchTab(id) {
@@ -182,7 +181,7 @@
         v = (v/100).toFixed(2).replace(".", ",").replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,").replace(/(\d)(\d{3}),/g, "$1.$2,");
         i.value = v !== "0,00" ? "R$ " + v : ""; cb();
     }
-    function clearTab(type) { location.reload(); } // Simples e limpa tudo
+    function clearTab(type) { location.reload(); }
 
     function calcH() {
         const sRaw = document.getElementById('h-saldo').value;
@@ -199,8 +198,7 @@
         const sRaw = document.getElementById('s-s').value;
         const s = parseFloat(sRaw.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
         if (s <= 0 || !ag) return;
-        // ... (lógica de faixas serasa simplificada para o exemplo)
-        let d = 0.10; // Exemplo de 10%
+        let d = 0.10; 
         const vD = s * d, vCD = s - vD, ap = parseFloat(document.getElementById('s-ap').value) || 0;
         const vA = vCD * (ap/100), qp = parseInt(document.getElementById('s-qp').value) || 1, vP = (vCD - vA)/qp;
         document.getElementById('s-vd').value = f(vD); document.getElementById('s-vcd').value = f(vCD);
@@ -208,12 +206,19 @@
         document.getElementById('macro-s').value = `🤝 *CAMPANHA SERASA*\n💰 Saldo: ${f(s)}\n📉 Desc: ${f(vD)}\n💵 Ato: ${f(vA)}\n📅 ${qp}x de ${f(vP)}`;
     }
 
-    function copy(id) { const t = document.getElementById(id); t.select(); document.execCommand('copy'); alert("Copiado!"); }
+    function copy(id) { 
+        const t = document.getElementById(id); 
+        t.select(); 
+        document.execCommand('copy'); 
+        alert("Copiado!"); 
+    }
 
-    // REGISTRO PWA - CAMINHO ABSOLUTO PARA EVITAR 404
+    // Registro do Service Worker com escopo absoluto
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/Calculadora-JBLAR-beta/sw.js', { scope: '/Calculadora-JBLAR-beta/' });
+        navigator.serviceWorker.register('/Calculadora-JBLAR-beta/sw.js', { scope: '/Calculadora-JBLAR-beta/' })
+          .then(reg => console.log('SW ativo!', reg))
+          .catch(err => console.log('Erro no SW:', err));
       });
     }
 </script>
