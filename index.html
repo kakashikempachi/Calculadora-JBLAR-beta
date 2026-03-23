@@ -3,34 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JBLAR - Simulador de Acordos</title>
+    <title>JBLAR - Simulador</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0c1628">
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR/refs/heads/main/file_000000002f64720e9e886d9bc8e6a94f.png">
 
     <style>
         :root { 
-            --gold-dark: #AA771C;
-            --gold-mid: #BF953F;
-            --gold-light: #FCF6BA;
-            --bg-deep-blue: #0c1628;
-            --screen-bg: rgba(245, 247, 250, 0.98);
-            --card-bg: white;
-            --text-main: #333;
-            --text-label: #888;
-            --input-bg: #fdfdfd;
-            --input-border: #e1e4e8;
-            --readonly-bg: #f1f3f5;
+            --gold-dark: #AA771C; --gold-mid: #BF953F; --gold-light: #FCF6BA;
+            --bg-deep-blue: #0c1628; --screen-bg: rgba(245, 247, 250, 0.98);
+            --card-bg: white; --text-main: #333; --text-label: #888;
+            --input-bg: #fdfdfd; --input-border: #e1e4e8; --readonly-bg: #f1f3f5;
         }
 
         .dark-theme {
-            --screen-bg: #0c1628;
-            --card-bg: #16243d;
-            --text-main: #f0f0f0;
-            --text-label: #FCF6BA;
-            --input-bg: #1f2d47;
-            --input-border: #3a4b6b;
+            --screen-bg: #0c1628; --card-bg: #16243d; --text-main: #f0f0f0;
+            --text-label: #FCF6BA; --input-bg: #1f2d47; --input-border: #3a4b6b;
             --readonly-bg: #09101d;
         }
 
@@ -39,8 +27,7 @@
         body { 
             background-color: var(--bg-deep-blue); 
             height: 100vh; width: 100vw;
-            overflow: hidden; 
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden; font-family: 'Segoe UI', Roboto, sans-serif;
             display: flex; justify-content: center; align-items: center;
         }
 
@@ -49,16 +36,15 @@
             position: relative;
             background-image: url('https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR/refs/heads/main/file_000000002f64720e9e886d9bc8e6a94f.png');
             background-size: cover; background-position: center top;
-            background-color: var(--bg-deep-blue);
             box-shadow: 0 0 50px rgba(0,0,0,0.9);
         }
 
-        .screen { display: none; width: 100%; height: 100%; position: relative; flex-direction: column; z-index: 10; }
+        .screen { display: none; width: 100%; height: 100%; position: relative; flex-direction: column; }
         .screen.active { display: flex; }
 
         #home-screen {
             justify-content: flex-end; 
-            background: linear-gradient(to bottom, transparent 30%, rgba(12, 22, 40, 0.8) 100%);
+            background: linear-gradient(to bottom, transparent 30%, rgba(12, 22, 40, 0.9) 100%);
             padding-bottom: 60px;
         }
 
@@ -66,39 +52,177 @@
 
         .btn-gold {
             width: 100%; padding: 18px;
-            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 30%, #B38728 50%, #FBF5B7 70%, #AA771C 100%);
-            background-size: 200% auto;
+            background: linear-gradient(135deg, #BF953F, #FCF6BA, #AA771C);
             border: 1px solid #7a5a12; border-radius: 14px;
-            color: #0c1628; font-weight: 800; font-size: 15px;
-            text-transform: uppercase; letter-spacing: 1.2px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 0 12px rgba(255, 255, 255, 0.5);
-            cursor: pointer; transition: 0.3s;
+            color: #0c1628; font-weight: 800; font-size: 14px;
+            text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+            cursor: pointer;
         }
-        .btn-gold:active { transform: scale(0.95); background-position: right center; }
 
         /* ABAS */
-        .tabs-header { display: flex; gap: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 15px; }
-        .tab-btn { flex: 1; padding: 12px 5px; border: none; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; color: #888; background: transparent; transition: 0.3s; }
-        .tab-btn.active { background: linear-gradient(135deg, #BF953F, #FCF6BA); color: #0c1628; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .tabs-header { display: flex; gap: 8px; margin-bottom: 15px; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 12px; }
+        .tab-btn { flex: 1; padding: 10px 5px; border: none; border-radius: 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; color: #888; background: transparent; cursor: pointer; }
+        .tab-btn.active { background: linear-gradient(135deg, #BF953F, #FCF6BA); color: #0c1628; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* CONTEÚDO */
+        /* CALCULADORA */
         #calc-screen { background: var(--screen-bg); overflow-y: auto; }
-        .header-nav { background-color: #0c1628; padding: 20px; color: #FCF6BA; font-weight: bold; display: flex; align-items: center; border-bottom: 3px solid #BF953F; justify-content: space-between; }
-        .content { padding: 20px; }
-        .card { background: var(--card-bg); padding: 20px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        .header-nav { background: #0c1628; padding: 15px 20px; color: #FCF6BA; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #BF953F; }
+        .content { padding: 15px; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         
-        label { display: block; font-size: 10px; font-weight: 800; color: var(--text-label); margin-bottom: 5px; text-transform: uppercase; }
-        input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid var(--input-border); border-radius: 12px; font-size: 15px; background: var(--input-bg); color: var(--text-main); }
+        label { display: block; font-size: 9px; font-weight: 800; color: var(--text-label); margin-bottom: 4px; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid var(--input-border); border-radius: 10px; font-size: 14px; background: var(--input-bg); color: var(--text-main); }
         
-        .input-row { display: flex; gap: 10px; }
+        .input-row { display: flex; gap: 8px; }
         .input-row div { flex: 1; }
         .readonly { background: var(--readonly-bg); font-weight: 700; border-color: transparent; }
         
         #macro-preview { 
-            width: 100%; height: 120px; border: 2px dashed #BF953F; border-radius: 12px; 
-            padding: 12px; font-size: 11px; background: var(--input-bg); resize: none; 
-            margin-top: 15px; color: var(--text-main); line-height: 1.4;
+            width: 100%; height: 110px; border: 1.5px dashed #BF953F; border-radius: 10px; 
+            padding: 10px; font-size: 11px; background: var(--input-bg); resize: none; 
+            margin-top: 10px; color: var(--text-main);
         }
-        .theme-toggle { cursor: pointer; font-size: 20px;
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div id="home-screen" class="screen active">
+        <div class="button-container">
+            <button class="btn-gold" onclick="nav('calc-screen')">Plano & Plano</button>
+            <button class="btn-gold" style="opacity: 0.5;">Cyrela (Em breve)</button>
+        </div>
+    </div>
+
+    <div id="calc-screen" class="screen">
+        <div class="header-nav">
+            <span onclick="nav('home-screen')" style="cursor:pointer;">❮ VOLTAR</span>
+            <div onclick="toggleTheme()" style="cursor:pointer;">🌙</div>
+        </div>
+        
+        <div class="content">
+            <div class="card">
+                <div class="tabs-header">
+                    <button class="tab-btn active" id="btn-h" onclick="switchTab('tab-h')">Pré Habite-se</button>
+                    <button class="tab-btn" id="btn-s" onclick="switchTab('tab-s')">Serasa</button>
+                </div>
+
+                <div id="tab-h" class="tab-content active">
+                    <label>Saldo Devedor</label>
+                    <input type="text" id="h-saldo" placeholder="R$ 0,00" oninput="mask(this, calcH)">
+                    <div class="input-row">
+                        <div><label>% Ato</label><input type="number" id="h-p" value="50" oninput="calcH()"></div>
+                        <div><label>Vlr Ato</label><input type="text" id="h-vA" class="readonly" readonly></div>
+                    </div>
+                    <div class="input-row">
+                        <div><label>Pagamento</label><input type="date" id="h-d1" oninput="calcH()"></div>
+                        <div><label>Habite-se</label><input type="date" id="h-d2" oninput="calcH()"></div>
+                    </div>
+                    <div class="input-row">
+                        <div><label>Meses</label><input type="text" id="h-m" class="readonly" readonly></div>
+                        <div><label>Parcelas</label><input type="number" id="h-q" value="3" oninput="calcH()"></div>
+                    </div>
+                    <label>Valor Parcela</label>
+                    <input type="text" id="h-vP" class="readonly" readonly>
+                </div>
+
+                <div id="tab-s" class="tab-content">
+                    <div class="input-row">
+                        <div><label>Aging (Dias)</label><input type="number" id="s-ag" placeholder="Ex: 74" oninput="calcS()"></div>
+                        <div><label>Saldo</label><input type="text" id="s-s" placeholder="R$ 0,00" oninput="mask(this, calcS)"></div>
+                    </div>
+                    <label>Faixa</label>
+                    <input type="text" id="s-c" class="readonly" readonly>
+                    <div class="input-row">
+                        <div><label>Desc (%)</label><input type="text" id="s-dp" class="readonly" readonly></div>
+                        <div><label>Máx Parc</label><input type="text" id="s-mp" class="readonly" readonly></div>
+                    </div>
+                    <div class="input-row">
+                        <div><label>% do Ato</label><input type="number" id="s-ap" value="1" oninput="calcS()"></div>
+                        <div><label>Vlr do Ato</label><input type="text" id="s-va" class="readonly" readonly></div>
+                    </div>
+                    <div class="input-row">
+                        <div><label>Qtd Parc</label><input type="number" id="s-qp" value="1" oninput="calcS()"></div>
+                        <div><label>Vlr Parc</label><input type="text" id="s-vp" class="readonly" readonly></div>
+                    </div>
+                </div>
+
+                <textarea id="macro-preview" readonly></textarea>
+                <button class="btn-gold" style="margin-top: 10px; width: 100%;" onclick="copy()">COPIAR ACORDO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const f = (n) => n.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+
+    function nav(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function switchTab(id) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById(id === 'tab-h' ? 'btn-h' : 'btn-s').classList.add('active');
+        document.getElementById('macro-preview').value = "";
+    }
+
+    function mask(i, cb) {
+        let v = i.value.replace(/\D/g,'');
+        v = (v/100).toFixed(2).replace(".", ",").replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,").replace(/(\d)(\d{3}),/g, "$1.$2,");
+        i.value = v !== "0,00" ? "R$ " + v : "";
+        cb();
+    }
+
+    function toggleTheme() { document.body.classList.toggle('dark-theme'); }
+
+    function calcH() {
+        const s = parseFloat(document.getElementById('h-saldo').value.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+        const p = parseFloat(document.getElementById('h-p').value) || 0;
+        const q = parseInt(document.getElementById('h-q').value) || 1;
+        const d1 = document.getElementById('h-d1').value, d2 = document.getElementById('h-d2').value;
+        const vA = s * (p/100), vP = (s - vA)/q;
+        let m = 0;
+        if(d1 && d2) m = Math.max(0, (new Date(d2).getFullYear() - new Date(d1).getFullYear()) * 12 + (new Date(d2).getMonth() - new Date(d1).getMonth()));
+        
+        document.getElementById('h-vA').value = f(vA);
+        document.getElementById('h-vP').value = f(vP);
+        document.getElementById('h-m').value = m + " meses";
+
+        if(s > 0) document.getElementById('macro-preview').value = `🏢 *ACORDO HABITE-SE*\nSaldo: ${f(s)}\nAto: ${f(vA)}\nParcelas: ${q}x ${f(vP)}`;
+    }
+
+    function calcS() {
+        const ag = parseInt(document.getElementById('s-ag').value) || 0;
+        const s = parseFloat(document.getElementById('s-s').value.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+        const ap = parseFloat(document.getElementById('s-ap').value) || 0;
+        const qp = parseInt(document.getElementById('s-qp').value) || 1;
+
+        let desc = 0, mp = 3, fa = "Aguardando";
+        if(ag >= 31 && ag <= 180) { desc = 0.10; mp = 6; fa = "Curto Prazo"; }
+        else if(ag > 180) { desc = 0.30; mp = 24; fa = "Longo Prazo"; }
+
+        const vD = s * desc, vCD = s - vD, vA = vCD * (ap/100), vP = (vCD - vA)/qp;
+        document.getElementById('s-c').value = fa;
+        document.getElementById('s-dp').value = (desc*100) + "%";
+        document.getElementById('s-mp').value = mp;
+        document.getElementById('s-va').value = f(vA);
+        document.getElementById('s-vp').value = f(vP);
+
+        if(s > 0) document.getElementById('macro-preview').value = `🤝 *OFERTA SERASA*\nSaldo: ${f(s)}\nFinal: ${f(vCD)}\nAto: ${f(vA)}\nPlano: ${qp}x ${f(vP)}`;
+    }
+
+    function copy() {
+        const t = document.getElementById('macro-preview');
+        if(!t.value) return;
+        navigator.clipboard.writeText(t.value).then(() => alert("Copiado!"));
+    }
+</script>
+</body>
+</html>
