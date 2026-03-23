@@ -203,10 +203,12 @@
         const s = parseFloat(sRaw.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
         
         let d = 0, mp = 1, txt = "Aguardando...";
-        if (ag >= 1 && ag <= 30) { txt = "FAIXA 1"; d = 0.10; mp = 6; }
-        else if (ag >= 31 && ag <= 60) { txt = "FAIXA 2"; d = 0.15; mp = 12; }
-        else if (ag >= 61 && ag <= 90) { txt = "FAIXA 3"; d = 0.20; mp = 18; }
-        else if (ag > 90) { txt = "FAIXA CRÍTICA"; d = 0.30; mp = 24; }
+        if (ag >= 1 && ag <= 30) { txt = "FAIXA 1 (01-30 DIAS)"; d = 0.05; mp = 6; }
+        else if (ag >= 31 && ag <= 60) { txt = "FAIXA 2 (31-60 DIAS)"; d = 0.10; mp = 10; }
+        else if (ag >= 61 && ag <= 90) { txt = "FAIXA 3 (61-90 DIAS)"; d = 0.15; mp = 12; }
+        else if (ag >= 91 && ag <= 120) { txt = "FAIXA 4 (91-120 DIAS)"; d = 0.20; mp = 18; }
+        else if (ag >= 121 && ag <= 180) { txt = "FAIXA 5 (121-180 DIAS)"; d = 0.25; mp = 24; }
+        else if (ag > 180) { txt = "FAIXA CRÍTICA (+180 DIAS)"; d = 0.35; mp = 36; }
 
         document.getElementById('s-c').value = txt;
         document.getElementById('s-dp').value = (d*100) + "%";
@@ -223,7 +225,7 @@
             document.getElementById('s-vcd').value = f(vCD);
             document.getElementById('s-va').value = f(vA);
             document.getElementById('s-vp').value = f(vP);
-            document.getElementById('macro-s').value = `🤝 *CAMPANHA SERASA*\n💰 Saldo: ${f(s)}\n📉 Desc: ${f(vD)}\n💵 Ato: ${f(vA)}\n📅 ${qp}x de ${f(vP)}`;
+            document.getElementById('macro-s').value = `🤝 *CAMPANHA SERASA*\n📌 Faixa: ${txt}\n💰 Saldo: ${f(s)}\n📉 Desc (${(d*100)}%): ${f(vD)}\n💵 Ato: ${f(vA)}\n📅 ${qp}x de ${f(vP)}`;
         }
     }
 
