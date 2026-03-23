@@ -5,8 +5,10 @@
   "start_url": "/Calculadora-JBLAR-beta/index.html",
   "scope": "/Calculadora-JBLAR-beta/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "minimal-ui"],
   "background_color": "#0c1628",
   "theme_color": "#0c1628",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "/Calculadora-JBLAR-beta/web-app-manifest-192x192.png",
