@@ -183,4 +183,7 @@
         if(s > 0) document.getElementById('macro-preview').value = `🤝 *CAMPANHA SERASA*\nSaldo: ${f(s)}\nDesconto: ${f(vD)}\nValor Final: ${f(vCD)}\nAto: ${f(vA)}\nParcelas: ${qp}x de ${f(vP)}`;
     }
 
-    function copy() { const t = document.getElementById('macro-preview'); if(t.value) { navigator.clipboard.writeText(
+    function copy() { const t = document.getElementById('macro-preview'); if(t.value) { navigator.clipboard.writeText(t.value).then(() => alert("Copiado!")); } }
+</script>
+</body>
+</html>
