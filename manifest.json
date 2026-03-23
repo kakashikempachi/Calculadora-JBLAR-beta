@@ -1,9 +1,17 @@
 {
   "name": "JBLAR Simulador",
   "short_name": "JBLAR",
-  "start_url": "./index.html",
-  "scope": "./",
+  "description": "Simulador de Acordos JBLAR",
+  "start_url": "/Calculadora-JBLAR-beta/index.html",
+  "scope": "/Calculadora-JBLAR-beta/",
   "display": "standalone",
   "background_color": "#0c1628",
-  "theme_color": "#0c1628"
+  "theme_color": "#0c1628",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR/refs/heads/main/file_000000002f64720e9e886d9bc8e6a94f.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
 }
