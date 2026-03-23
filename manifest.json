@@ -1,14 +1,14 @@
 {
-  "name": "Sistema de Cobrança Pro",
+  "name": "Cobrança Pro",
   "short_name": "Cobrança",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#2c3e50",
+  "theme_color": "#f19f89",
   "icons": [
     {
-      "src": "icon-192.png",
-      "sizes": "192x192",
+      "src": "https://cdn-icons-png.flaticon.com/512/1011/1011322.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
