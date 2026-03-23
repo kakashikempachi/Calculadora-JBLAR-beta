@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JBLAR - Simulador</title>
+    <title>JBLAR - Simulador Profissional</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0c1628">
     <style>
@@ -40,7 +40,7 @@
         .input-row { display: flex; gap: 8px; }
         .input-row div { flex: 1; }
         .readonly { background: var(--readonly-bg); font-weight: 700; border-color: transparent; }
-        #macro-preview { width: 100%; height: 110px; border: 1.5px dashed #BF953F; border-radius: 10px; padding: 10px; font-size: 11px; background: var(--input-bg); resize: none; margin-top: 10px; color: var(--text-main); line-height: 1.3; }
+        .macro-preview { width: 100%; height: 110px; border: 1.5px dashed #BF953F; border-radius: 10px; padding: 10px; font-size: 11px; background: var(--input-bg); resize: none; margin-top: 10px; color: var(--text-main); line-height: 1.3; }
     </style>
 </head>
 <body>
@@ -49,6 +49,7 @@
     <div id="home-screen" class="screen active">
         <div class="button-container">
             <button class="btn-gold" onclick="nav('calc-screen')">Plano & Plano</button>
+            <button class="btn-gold" style="opacity: 0.5; filter: grayscale(1); cursor: not-allowed;">Cyrela (Em breve)</button>
         </div>
     </div>
 
@@ -82,6 +83,8 @@
                     </div>
                     <label>Valor Parcela</label>
                     <input type="text" id="h-vP" class="readonly" readonly>
+                    <textarea id="macro-h" class="macro-preview" readonly placeholder="Resumo do acordo Pre Habite-se..."></textarea>
+                    <button class="btn-gold" style="margin-top: 10px; width: 100%;" onclick="copy('macro-h')">COPIAR ACORDO</button>
                 </div>
 
                 <div id="tab-s" class="tab-content">
@@ -107,10 +110,9 @@
                         <div><label>Qtd Parc</label><input type="number" id="s-qp" value="1" oninput="calcS()"></div>
                         <div><label>Vlr Parc</label><input type="text" id="s-vp" class="readonly" readonly></div>
                     </div>
+                    <textarea id="macro-s" class="macro-preview" readonly placeholder="Resumo do acordo Serasa..."></textarea>
+                    <button class="btn-gold" style="margin-top: 10px; width: 100%;" onclick="copy('macro-s')">COPIAR ACORDO</button>
                 </div>
-
-                <textarea id="macro-preview" readonly></textarea>
-                <button class="btn-gold" style="margin-top: 10px; width: 100%;" onclick="copy()">COPIAR ACORDO</button>
             </div>
         </div>
     </div>
@@ -149,7 +151,7 @@
         let m = 0;
         if(d1 && d2) m = Math.max(0, (new Date(d2).getFullYear() - new Date(d1).getFullYear()) * 12 + (new Date(d2).getMonth() - new Date(d1).getMonth()));
         document.getElementById('h-vA').value = f(vA); document.getElementById('h-vP').value = f(vP); document.getElementById('h-m').value = m + " meses";
-        if(s > 0) document.getElementById('macro-preview').value = `🏢 *ACORDO JBLAR*\nSaldo: ${f(s)}\nAto: ${f(vA)}\nParcelas: ${q}x ${f(vP)}`;
+        if(s > 0) document.getElementById('macro-h').value = `🏢 *ACORDO HABITE-SE*\nSaldo: ${f(s)}\nAto: ${f(vA)}\nParcelas: ${q}x ${f(vP)}`;
     }
 
     function getFaixa(ag, s) {
@@ -180,10 +182,10 @@
         document.getElementById('s-c').value = fx; document.getElementById('s-dp').value = (d*100) + "%"; document.getElementById('s-mp').value = mp;
         document.getElementById('s-vd').value = f(vD); document.getElementById('s-vcd').value = f(vCD); document.getElementById('s-va').value = f(vA); document.getElementById('s-vp').value = f(vP);
 
-        if(s > 0) document.getElementById('macro-preview').value = `🤝 *CAMPANHA SERASA*\nSaldo: ${f(s)}\nDesconto: ${f(vD)}\nValor Final: ${f(vCD)}\nAto: ${f(vA)}\nParcelas: ${qp}x de ${f(vP)}`;
+        if(s > 0) document.getElementById('macro-s').value = `🤝 *CAMPANHA SERASA*\nSaldo: ${f(s)}\nDesconto: ${f(vD)}\nValor Final: ${f(vCD)}\nAto: ${f(vA)}\nParcelas: ${qp}x de ${f(vP)}`;
     }
 
-    function copy() { const t = document.getElementById('macro-preview'); if(t.value) { navigator.clipboard.writeText(t.value).then(() => alert("Copiado!")); } }
+    function copy(id) { const t = document.getElementById(id); if(t.value) { navigator.clipboard.writeText(t.value).then(() => alert("Copiado!")); } }
 </script>
 </body>
 </html>
