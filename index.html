@@ -174,7 +174,7 @@
                 <input type="text" id="vP" class="readonly" readonly>
 
                 <textarea id="macro-preview" readonly></textarea>
-                <button class="btn-green" onclick="copy()">COPIAR ACORDO </button>
+                <button class="btn-green" onclick="copy()">COPIAR ACORDO</button>
             </div>
         </div>
     </div>
@@ -226,12 +226,12 @@
         document.getElementById('mesM').value = m + " meses";
 
         if(s > 0) {
-            // 2º Ajuste: Macro alterada (Adicionado data do ato e removido Prazo)
+            // CORREÇÃO DA SINTAXE ABAIXO:
             document.getElementById('macro-preview').value = 
                 `🏢 *ACORDO JBLAR*\n\n` +
                 `💰 *Saldo Devedor:* ${f(s)}\n` +
                 `🤝 *Ato/Entrada:* ${f(vA)} com pagamento no dia ${dataAtoFormatada}\n` +
-                `📅 *Parcelamento:* ${q}x de ${f(vPa)}`" após confirmação do pagamento do ato";
+                `📅 *Parcelamento:* ${q}x de ${f(vPa)} após confirmação do pagamento do ato`;
         }
     }
 
