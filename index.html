@@ -165,4 +165,57 @@
         if (ag >= 61 && ag <= 90) return s <= 700 ? "Aging 61 a 90 Faixa 1" : (s <= 1500 ? "Aging 61 a 90 Faixa 2" : "Aging 61 a 90 Faixa 3");
         if (ag >= 91 && ag <= 180) return s <= 700 ? "Aging 91 a 180 Faixa 1" : (s <= 1500 ? "Aging 91 a 180 Faixa 2" : (s <= 3000 ? "Aging 91 a 180 Faixa 3" : "Aging 91 a 180 Faixa 4"));
         if (ag >= 181 && ag <= 364) return s <= 700 ? "Aging 181 a 364 Faixa 1" : (s <= 1500 ? "Aging 181 a 364 Faixa 2" : (s <= 3000 ? "Aging 181 a 364 Faixa 3" : (s <= 5000 ? "Aging 181 a 364 Faixa 4" : "Aging 181 a 364 Faixa 5")));
-        if (ag >= 365 && ag <= 730) return s <= 700 ? "Aging 365 a 730 Faixa 1" : (s <= 1500 ? "Aging 365 a 730 Faixa 2" : (s <= 3000 ? "Aging 365 a 730 Faixa 3" : (s <= 5000 ? "Aging 365 a 730 Faixa 4
+        if (ag >= 365 && ag <= 730) return s <= 700 ? "Aging 365 a 730 Faixa 1" : (s <= 1500 ? "Aging 365 a 730 Faixa 2" : (s <= 3000 ? "Aging 365 a 730 Faixa 3" : (s <= 5000 ? "Aging 365 a 730 Faixa 4" : (s <= 10000 ? "Aging 365 a 730 Faixa 5" : (s <= 20000 ? "Aging 365 a 730 Faixa 6" : "Aging 365 a 730 Faixa 7")))));
+        if (ag >= 731 && ag <= 1095) return s <= 700 ? "Aging 731 a 1095 Faixa 1" : (s <= 1500 ? "Aging 731 a 1095 Faixa 2" : (s <= 3000 ? "Aging 731 a 1095 Faixa 3" : (s <= 5000 ? "Aging 731 a 1095 Faixa 4" : "Aging 731 a 1095 Faixa 5")));
+        if (ag >= 1096 && ag <= 1460) return s <= 700 ? "Aging 1096 a 1460 Faixa 1" : (s <= 1500 ? "Aging 1096 a 1460 Faixa 2" : (s <= 3000 ? "Aging 1096 a 1460 Faixa 3" : (s <= 5000 ? "Aging 1096 a 1460 Faixa 4" : "Aging 1096 a 1460 Faixa 5")));
+        if (ag > 1460) return s <= 700 ? "Aging Maior 1460 Faixa 1" : (s <= 1500 ? "Aging Maior 1460 Faixa 2" : (s <= 3000 ? "Aging Maior 1460 Faixa 3" : (s <= 5000 ? "Aging Maior 1460 Faixa 4" : (s <= 10000 ? "Aging Maior 1460 Faixa 5" : (s <= 20000 ? "Aging Maior 1460 Faixa 6" : "Aging Maior 1460 Faixa 7")))));
+        return "Aging fora de alcance";
+    }
+
+    function calcS() {
+        const ag = parseInt(document.getElementById('s-ag').value) || 0;
+        const s = parseFloat(document.getElementById('s-s').value.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+        const ap = parseFloat(document.getElementById('s-ap').value) || 0;
+        const qp = parseInt(document.getElementById('s-qp').value) || 1;
+        
+        const fx = getFaixa(ag, s);
+        let d = 0, mp = 3;
+
+        // Atribuição de Descontos baseada no texto da faixa
+        if(fx.includes("31 a 60")) d = 0.05; 
+        else if(fx.includes("61 a 90")) d = 0.10; 
+        else if(fx.includes("91 a 180")) d = 0.15; 
+        else if(fx.includes("181 a 364")) d = 0.25; 
+        else if(fx.includes("365 a 730")) d = 0.30; 
+        else if(fx.includes("731 a 1095")) d = 0.50; 
+        else if(fx.includes("1096 a 1460")) d = 0.60; 
+        else if(fx.includes("Maior 1460")) d = 0.70;
+        
+        // Atribuição de Máximo de Parcelas
+        const parcMap = {"31 a 60 Faixa 3":8,"61 a 90 Faixa 3":6,"91 a 180 Faixa 4":12,"181 a 364 Faixa 5":20,"365 a 730 Faixa 7":60,"Maior 1460 Faixa 7":60};
+        Object.keys(parcMap).forEach(k => { if(fx.includes(k)) mp = parcMap[k]; });
+
+        const vD = s * d, vCD = s - vD, vA = vCD * (ap/100), vP = (vCD - vA)/qp;
+        
+        document.getElementById('s-c').value = fx; 
+        document.getElementById('s-dp').value = (d*100) + "%"; 
+        document.getElementById('s-mp').value = mp;
+        document.getElementById('s-vd').value = f(vD); 
+        document.getElementById('s-vcd').value = f(vCD); 
+        document.getElementById('s-va').value = f(vA); 
+        document.getElementById('s-vp').value = f(vP);
+
+        if(s > 0) document.getElementById('macro-preview').value = `🤝 *CAMPANHA SERASA*\n📌 ${fx}\n💰 Saldo Original: ${f(s)}\n📉 Desconto: ${f(vD)}\n✅ Valor Final: ${f(vCD)}\n💵 Ato: ${f(vA)}\n📅 Parcelas: ${qp}x de ${f(vP)}`;
+    }
+
+    function copy() { 
+        const t = document.getElementById('macro-preview'); 
+        if(t.value) { 
+            navigator.clipboard.writeText(t.value).then(() => alert("Copiado com sucesso!")); 
+        } else {
+            alert("Nada para copiar!");
+        }
+    }
+</script>
+</body>
+</html>
