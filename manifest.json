@@ -1,13 +1,13 @@
 {
-  "name": "Cobrança Pro",
-  "short_name": "Cobrança",
-  "start_url": "index.html",
+  "name": "Simulador JBLAR",
+  "short_name": "JBLAR",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#f19f89",
+  "background_color": "#0c1628",
+  "theme_color": "#BF953F",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/1011/1011322.png",
+      "src": "https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR/refs/heads/main/file_000000002f64720e9e886d9bc8e6a94f.png",
       "sizes": "512x512",
       "type": "image/png"
     }
