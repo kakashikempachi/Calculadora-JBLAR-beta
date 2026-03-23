@@ -26,7 +26,7 @@
         #home-screen { justify-content: flex-end; background: linear-gradient(to bottom, transparent 30%, rgba(12, 22, 40, 0.9) 100%); padding-bottom: 60px; }
         .button-container { width: 100%; padding: 0 35px; display: flex; flex-direction: column; gap: 18px; }
         .btn-gold { width: 100%; padding: 18px; background: linear-gradient(135deg, #BF953F, #FCF6BA, #AA771C); border: 1px solid #7a5a12; border-radius: 14px; color: #0c1628; font-weight: 800; font-size: 14px; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .btn-clear { background: #f1f3f5; border: 1px solid #ddd; color: #666; padding: 8px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px; width: 100%; }
+        .btn-clear { background: #f1f3f5; border: 1px solid #ddd; color: #666; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px; width: 100%; }
         #calc-screen { background: var(--screen-bg); overflow-y: auto; }
         .header-nav { background: #0c1628; padding: 15px 20px; color: #FCF6BA; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #BF953F; }
         .content { padding: 15px; }
@@ -81,7 +81,7 @@
                     </div>
                     <div class="input-row">
                         <div><label>Meses</label><input type="text" id="h-m" class="readonly" readonly></div>
-                        <div><label>Parcelas</label><input type="number" id="h-q" value="3" oninput="calcH()"></div>
+                        <div><label>Parcelas</label><input type="number" id="h-q" value="1" oninput="calcH()"></div>
                     </div>
                     <label>Valor Parcela</label>
                     <input type="text" id="h-vP" class="readonly" readonly>
@@ -191,11 +191,8 @@
         const s = parseFloat(sRaw.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
         const macro = document.getElementById('macro-s');
         if (s <= 0 || !ag) { macro.value = ""; return; }
-        
         const fx = getFaixa(ag, s);
         let d = 0, mp = 3;
-        
-        // Regras de Desconto e Parcelas Máximas (Baseadas na Planilha)
         if(fx.includes("31 a 60")) { d = 0.05; mp = fx.includes("Faixa 3") ? 8 : 4; }
         else if(fx.includes("61 a 90")) { d = 0.10; mp = fx.includes("Faixa 3") ? 6 : 4; }
         else if(fx.includes("91 a 180")) { d = 0.15; mp = fx.includes("Faixa 4") ? 12 : 6; }
@@ -203,22 +200,21 @@
         else if(fx.includes("365 a 730")) { d = 0.30; mp = fx.includes("Faixa 7") ? 60 : 24; }
         else if(fx.includes("731 a 1095")) { d = 0.50; mp = 24; }
         else if(fx.includes("Master")) { d = 0.70; mp = 60; }
-
         const vD = s * d, vCD = s - vD, ap = parseFloat(document.getElementById('s-ap').value) || 0;
         const vA = vCD * (ap/100), qp = parseInt(document.getElementById('s-qp').value) || 1, vP = (vCD - vA)/qp;
-
-        document.getElementById('s-c').value = fx; 
-        document.getElementById('s-dp').value = (d*100) + "%"; 
-        document.getElementById('s-mp').value = mp; // Aqui foi corrigido a exibição
-        document.getElementById('s-vd').value = f(vD); 
-        document.getElementById('s-vcd').value = f(vCD); 
-        document.getElementById('s-va').value = f(vA); 
-        document.getElementById('s-vp').value = f(vP);
-
+        document.getElementById('s-c').value = fx; document.getElementById('s-dp').value = (d*100) + "%"; document.getElementById('s-mp').value = mp;
+        document.getElementById('s-vd').value = f(vD); document.getElementById('s-vcd').value = f(vCD); document.getElementById('s-va').value = f(vA); document.getElementById('s-vp').value = f(vP);
         macro.value = `🤝 *CAMPANHA SERASA - JBLAR*\n\n💰 Saldo Total: ${f(s)}\n📉 Desconto (${(d*100)}%): ${f(vD)}\n✅ Saldo com Desconto: ${f(vCD)}\n\n💵 Pagamento de ATO: ${f(vA)}\n📅 Parcelado em: ${qp}x de ${f(vP)}\n\n⚠️ O não pagamento do boleto do ATO até a data combinada acarretará na perda da oferta com desconto.`;
     }
 
     function copy(id) { const t = document.getElementById(id); if(t.value) { navigator.clipboard.writeText(t.value).then(() => alert("Acordo copiado!")); } }
+
+    // REGISTRO DO SERVICE WORKER (PARA FUNCIONAMENTO OFFLINE)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
 </script>
 </body>
 </html>
