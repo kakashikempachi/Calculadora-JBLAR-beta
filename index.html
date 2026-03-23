@@ -9,7 +9,26 @@
             --gold-dark: #AA771C;
             --gold-mid: #BF953F;
             --gold-light: #FCF6BA;
-            --bg-deep-blue: #0c1628; 
+            --bg-deep-blue: #0c1628;
+            /* Cores do Tema Claro */
+            --screen-bg: rgba(245, 247, 250, 0.98);
+            --card-bg: white;
+            --text-main: #333;
+            --text-label: #888;
+            --input-bg: #fdfdfd;
+            --input-border: #e1e4e8;
+            --readonly-bg: #f1f3f5;
+        }
+
+        /* Definições do Tema Escuro */
+        .dark-theme {
+            --screen-bg: #0c1628;
+            --card-bg: #16243d;
+            --text-main: #f0f0f0;
+            --text-label: #FCF6BA;
+            --input-bg: #1f2d47;
+            --input-border: #3a4b6b;
+            --readonly-bg: #09101d;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -23,14 +42,10 @@
         }
 
         #app-container { 
-            width: 100%; 
-            max-width: 480px;
-            height: 100%;
+            width: 100%; max-width: 480px; height: 100%;
             position: relative;
             background-image: url('https://raw.githubusercontent.com/kakashikempachi/Calculadora-JBLAR/refs/heads/main/file_000000002f64720e9e886d9bc8e6a94f.png');
-            background-size: cover;
-            background-position: center top;
-            background-repeat: no-repeat;
+            background-size: cover; background-position: center top;
             background-color: var(--bg-deep-blue);
             box-shadow: 0 0 50px rgba(0,0,0,0.9);
         }
@@ -44,81 +59,71 @@
             padding-bottom: 60px;
         }
 
-        .button-container {
-            width: 100%;
-            padding: 0 35px;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
+        .button-container { width: 100%; padding: 0 35px; display: flex; flex-direction: column; gap: 18px; }
 
         .btn-gold {
-            width: 100%;
-            padding: 18px;
+            width: 100%; padding: 18px;
             background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 30%, #B38728 50%, #FBF5B7 70%, #AA771C 100%);
             background-size: 200% auto;
-            border: 1px solid #7a5a12;
-            border-radius: 14px;
-            color: #0c1628; 
-            font-weight: 800;
-            font-size: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
+            border: 1px solid #7a5a12; border-radius: 14px;
+            color: #0c1628; font-weight: 800; font-size: 15px;
+            text-transform: uppercase; letter-spacing: 1.2px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 0 12px rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .btn-gold:active { transform: scale(0.95); background-position: right center; }
 
         .btn-disabled {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            color: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.1);
             cursor: not-allowed;
         }
 
-        #calc-screen { background: rgba(245, 247, 250, 0.98); overflow-y: auto; }
+        /* Estilização Dinâmica do Simulador */
+        #calc-screen { background: var(--screen-bg); overflow-y: auto; transition: background 0.3s; }
 
         .header-nav {
-            background-color: #0c1628;
-            padding: 20px;
-            color: #FCF6BA;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            border-bottom: 3px solid #BF953F;
+            background-color: #0c1628; padding: 20px; color: #FCF6BA;
+            font-weight: bold; display: flex; align-items: center;
+            border-bottom: 3px solid #BF953F; justify-content: space-between;
         }
 
         .content { padding: 20px; }
         .card { 
-            background: white; 
-            padding: 25px; 
-            border-radius: 20px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            background: var(--card-bg); padding: 25px; border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); transition: background 0.3s;
         }
 
-        h2 { color: #AA771C; font-size: 18px; margin-bottom: 20px; text-align: center; font-weight: 700; }
+        h2 { color: var(--gold-mid); font-size: 18px; margin-bottom: 20px; text-align: center; font-weight: 700; }
 
-        label { display: block; font-size: 10px; font-weight: 800; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        label { display: block; font-size: 10px; font-weight: 800; color: var(--text-label); margin-bottom: 5px; text-transform: uppercase; }
         input { 
             width: 100%; padding: 14px; margin-bottom: 15px; 
-            border: 1px solid #e1e4e8; border-radius: 12px; 
-            font-size: 16px; background: #fdfdfd; color: #333;
+            border: 1px solid var(--input-border); border-radius: 12px; 
+            font-size: 16px; background: var(--input-bg); color: var(--text-main);
+            transition: all 0.3s;
         }
 
         .input-row { display: flex; gap: 12px; }
         .input-row div { flex: 1; }
-        .readonly { background: #f1f3f5; color: #000; font-weight: 700; border-color: #eee; }
+        .readonly { background: var(--readonly-bg); font-weight: 700; border-color: transparent; }
 
         #macro-preview { 
             width: 100%; height: 130px; border: 2px dashed #BF953F; 
             border-radius: 12px; padding: 12px; font-size: 13px; 
-            background: #fffdf9; resize: none; margin-top: 10px; line-height: 1.5; color: #444;
+            background: var(--input-bg); resize: none; margin-top: 10px; 
+            line-height: 1.5; color: var(--text-main);
         }
 
         .btn-copy { margin-top: 20px; }
+
+        /* Estilo do Botão de Tema */
+        .theme-toggle {
+            cursor: pointer; font-size: 20px; padding: 5px;
+            transition: transform 0.3s;
+        }
+        .theme-toggle:active { transform: rotate(45deg); }
     </style>
 </head>
 <body>
@@ -133,8 +138,11 @@
 
     <div id="calc-screen" class="screen">
         <div class="header-nav">
-            <span onclick="nav('home-screen')" style="cursor:pointer; padding-right: 20px;">❮ VOLTAR</span>
-            <span>SIMULADOR JBLAR</span>
+            <div>
+                <span onclick="nav('home-screen')" style="cursor:pointer; padding-right: 15px;">❮ VOLTAR</span>
+                <span>SIMULADOR JBLAR</span>
+            </div>
+            <div class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</div>
         </div>
         <div class="content">
             <div class="card">
@@ -175,6 +183,19 @@
 </div>
 
 <script>
+    // Função para alternar o tema
+    function toggleTheme() {
+        const body = document.body;
+        const icon = document.getElementById('theme-icon');
+        body.classList.toggle('dark-theme');
+        
+        if(body.classList.contains('dark-theme')) {
+            icon.innerText = "☀️";
+        } else {
+            icon.innerText = "🌙";
+        }
+    }
+
     function nav(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -200,8 +221,6 @@
         
         let m = 0;
         let dataAtoFormatada = "";
-
-        // Reinicia o campo de meses antes do novo cálculo
         document.getElementById('mesM').value = "";
 
         if (d1Input) {
@@ -212,16 +231,9 @@
         if (d1Input && d2Input) {
             const date1 = new Date(d1Input + 'T00:00:00');
             const date2 = new Date(d2Input + 'T00:00:00');
-            
-            // Lógica ajustada para não acumular
             if (date2 > date1) {
                 m = (date2.getFullYear() - date1.getFullYear()) * 12 + (date2.getMonth() - date1.getMonth());
-                // Se o dia do Habite-se for menor que o dia do pagamento, subtrai um mês para ser preciso
-                if (date2.getDate() < date1.getDate()) {
-                    m--;
-                }
-            } else {
-                m = 0;
+                if (date2.getDate() < date1.getDate()) m--;
             }
         }
 
