@@ -187,7 +187,7 @@
         }
 
         if (s > 0) {
-            const p = parseFloat(document.getElementById('h-p').value) || 0;
+            const p = parseFloat(document.getElementById('h-p').value) || 50;
             const q = parseInt(document.getElementById('h-q').value) || 1;
             const vA = s * (p/100);
             const vP = (s - vA)/q;
@@ -203,11 +203,13 @@
         const s = parseFloat(sRaw.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
         
         let d = 0, mp = 1, txt = "Aguardando...";
-        if (ag >= 1 && ag <= 30) { txt = "FAIXA 1 (01-30 DIAS)"; d = 0.05; mp = 6; }
-        else if (ag >= 31 && ag <= 60) { txt = "FAIXA 2 (31-60 DIAS)"; d = 0.10; mp = 10; }
-        else if (ag >= 61 && ag <= 90) { txt = "FAIXA 3 (61-90 DIAS)"; d = 0.15; mp = 12; }
-        else if (ag >= 91 && ag <= 120) { txt = "FAIXA 4 (91-120 DIAS)"; d = 0.20; mp = 18; }
-        else if (ag >= 121 && ag <= 180) { txt = "FAIXA 5 (121-180 DIAS)"; d = 0.25; mp = 24; }
+        
+        // Definição exata das faixas para registro
+        if (ag >= 1 && ag <= 30) { txt = "FAIXA 1 (01 A 30 DIAS)"; d = 0.05; mp = 6; }
+        else if (ag >= 31 && ag <= 60) { txt = "FAIXA 2 (31 A 60 DIAS)"; d = 0.10; mp = 10; }
+        else if (ag >= 61 && ag <= 90) { txt = "FAIXA 3 (61 A 90 DIAS)"; d = 0.15; mp = 12; }
+        else if (ag >= 91 && ag <= 120) { txt = "FAIXA 4 (91 A 120 DIAS)"; d = 0.20; mp = 18; }
+        else if (ag >= 121 && ag <= 180) { txt = "FAIXA 5 (121 A 180 DIAS)"; d = 0.25; mp = 24; }
         else if (ag > 180) { txt = "FAIXA CRÍTICA (+180 DIAS)"; d = 0.35; mp = 36; }
 
         document.getElementById('s-c').value = txt;
@@ -216,7 +218,7 @@
 
         if (s > 0) {
             const vD = s * d, vCD = s - vD;
-            const ap = parseFloat(document.getElementById('s-ap').value) || 0;
+            const ap = parseFloat(document.getElementById('s-ap').value) || 1;
             const vA = vCD * (ap/100);
             const qp = parseInt(document.getElementById('s-qp').value) || 1;
             const vP = (vCD - vA)/qp;
